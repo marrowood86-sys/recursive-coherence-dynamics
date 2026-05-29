@@ -39,3 +39,16 @@ Run verification after data files exist:
 ```bash
 python tests/verify_assets.py
 ```
+### Interpretation
+
+The ablation results suggest that spectral-dimension reduction is primarily driven by the phase-alignment reinforcement term.
+
+CONTROL_C closely matches the Active RC model because both contain the same phase-proximity weight update. When nodes enter similar phases, their connecting weights strengthen, causing the network to condense into localized structural pathways. This produces the observed drop in spectral dimension.
+
+CONTROL_A, CONTROL_B, and CONTROL_E fail to reproduce this condensed phase because they lack the phase-alignment reinforcement term. CONTROL_E isolates the entropy term alone, but without phase proximity it has no coordinate mechanism for selective structure formation.
+
+CONTROL_D collapses because pure Kuramoto synchronization produces global phase-lock without an adaptive weighted topology. The result is an over-condensed, nearly singular structure.
+
+The key distinction between RC and CONTROL_C is expected to appear over larger networks or longer time horizons. CONTROL_C behaves like an unconstrained condensation engine, while Active RC includes the entropy penalty as a stabilizing regulator. Phase alignment lowers dimensionality; entropy regulation prevents runaway over-condensation.
+
+Thus, the working hypothesis is that Recursive Coherence is not entropy-only. It is a regulated condensation process: phase alignment acts as the primary attractive mechanism, while row-entropy acts as the geometric brake.
