@@ -27,7 +27,7 @@ T_NOISE = 0.02
 D_DISS = 0.005
 K_KURAMOTO = 0.50
 
-MODELS = ["RC", "CONTROL_A", "CONTROL_B", "CONTROL_C", "CONTROL_D"]
+MODELS = ["RC", "CONTROL_A", "CONTROL_B", "CONTROL_C", "CONTROL_D", "CONTROL_E"]
 
 
 def compute_structural_entropy(W):
@@ -132,6 +132,22 @@ def run_simulation_step(model_type, theta, omega, W, step, rng):
 
     elif model_type == "CONTROL_D":
         W_next = np.ones((N, N)) * (K_KURAMOTO / N)
+
+    elif model_type == "CONTROL_E":
+        H_row = np.zeros_like(W)
+
+        for i in range(N):
+            row = W[i]
+
+            if np.sum(row) > 0:
+                p = row / np.sum(row)
+                H_row[i, :] = -np.sum(p * np.log(p + 1e-12))
+
+        W_next = np.clip(
+        W - DT * ALPHA * LAMBDA * H_row,
+        0.0,
+        1.0
+    )
 
     else:
         raise ValueError(f"Unknown model type: {model_type}")
